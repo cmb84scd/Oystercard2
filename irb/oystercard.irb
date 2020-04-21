@@ -7,3 +7,6 @@ card.balance
 card.top_up(10)
 
 card.balance
+
+card.top_up(100)
+card.balance
