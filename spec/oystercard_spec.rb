@@ -33,9 +33,32 @@ describe Oystercard do
     it { is_expected.to respond_to(:deduct).with(1).argument }
 
     it "deducts certain amount from the balance" do
-      expect {subject.deduct(10)}.to change {subject.balance}.by(-10) 
+      expect {subject.deduct(10)}.to change {subject.balance}.by(-10)
     end
 
   end
 
+  describe '#touch_in' do
+    it {is_expected.to respond_to (:touch_in)}
+
+    it 'Touch in sets in_journey to true' do
+      expect { subject.touch_in }.to change{subject.in_use}.from(false).to(true)
+    end
+  end
+
+  describe '#touch_out' do
+    it {is_expected.to respond_to (:touch_out)}
+
+    it 'Touch out sets in_journey to false' do
+      subject.touch_in
+      expect { subject.touch_out }.to change{subject.in_use}.from(true).to(false)
+    end
+  end
+
+  describe '#in_journey' do
+    it 'returns true if in_use is true' do
+      subject.touch_in
+      expect(subject.in_journey).to eq true
+    end
+  end
 end
