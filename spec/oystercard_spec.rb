@@ -64,6 +64,10 @@ describe Oystercard do
     it 'Touch out deducts minimum fare' do
       expect { subject.touch_out }.to change{subject.balance}.by -Oystercard::MIN_CHARGE
     end
+
+    it 'sets the entry_station variable to nil' do
+      expect { subject.touch_out }.to change {subject.entry_station}.to nil
+    end
   end
 
 end
