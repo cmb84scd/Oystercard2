@@ -33,11 +33,6 @@ describe Oystercard do
     # it {is_expected.to respond_to (:touch_in)}
     let(:station) { double("Tube station", :name => "Oxford") }
 
-    it 'Touch in sets in_journey to true' do
-      subject.top_up(Oystercard::MIN_CHARGE)
-      expect { subject.touch_in(station) }.to change{subject.in_journey}.from(false).to(true)
-    end
-
     it 'raises error if balance not sufficient' do
       expect { subject.touch_in(station) }.to raise_error "Insufficient funds"
     end
@@ -55,18 +50,20 @@ describe Oystercard do
 
     it {is_expected.to respond_to (:touch_out)}
 
-    it 'Touch out sets in_journey to false' do
-      subject.top_up(Oystercard::MIN_CHARGE)
-      subject.touch_in(station)
-      expect { subject.touch_out }.to change{subject.in_journey}.from(true).to(false)
-    end
-
     it 'Touch out deducts minimum fare' do
       expect { subject.touch_out }.to change{subject.balance}.by -Oystercard::MIN_CHARGE
     end
 
     it 'sets the entry_station variable to nil' do
-      expect { subject.touch_out }.to change {subject.entry_station}.to nil
+      expect { subject.touch_out }.to change { subject.entry_station }.to nil
+    end
+  end
+
+  describe '#in_journey?' do
+    let(:station) { double("Tube station", :name => "Oxford")}
+    it 'infers its status based on existence of entry station' do
+      subject.top_up(Oystercard::MIN_CHARGE)
+      expect { subject.touch_in(station) }.to change { subject.in_journey? }.from(false).to(true)
     end
   end
 
