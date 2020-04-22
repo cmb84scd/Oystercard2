@@ -42,14 +42,21 @@ describe Oystercard do
     it {is_expected.to respond_to (:touch_in)}
 
     it 'Touch in sets in_journey to true' do
+      subject.top_up(Oystercard::MIN_CHARGE)
       expect { subject.touch_in }.to change{subject.in_use}.from(false).to(true)
     end
+
+    it 'raises error if balance not sufficient' do
+      expect { subject.touch_in }.to raise_error "Insufficient funds"
+    end
+
   end
 
   describe '#touch_out' do
     it {is_expected.to respond_to (:touch_out)}
 
     it 'Touch out sets in_journey to false' do
+      subject.top_up(Oystercard::MIN_CHARGE)
       subject.touch_in
       expect { subject.touch_out }.to change{subject.in_use}.from(true).to(false)
     end
@@ -57,6 +64,7 @@ describe Oystercard do
 
   describe '#in_journey' do
     it 'returns true if in_use is true' do
+      subject.top_up(Oystercard::MIN_CHARGE)
       subject.touch_in
       expect(subject.in_journey).to eq true
     end
