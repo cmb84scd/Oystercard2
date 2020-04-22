@@ -34,7 +34,7 @@ describe Oystercard do
 
     it 'Touch in sets in_journey to true' do
       subject.top_up(Oystercard::MIN_CHARGE)
-      expect { subject.touch_in }.to change{subject.in_use}.from(false).to(true)
+      expect { subject.touch_in }.to change{subject.in_journey}.from(false).to(true)
     end
 
     it 'raises error if balance not sufficient' do
@@ -49,7 +49,7 @@ describe Oystercard do
     it 'Touch out sets in_journey to false' do
       subject.top_up(Oystercard::MIN_CHARGE)
       subject.touch_in
-      expect { subject.touch_out }.to change{subject.in_use}.from(true).to(false)
+      expect { subject.touch_out }.to change{subject.in_journey}.from(true).to(false)
     end
 
     it 'Touch out deducts minimum fare' do
@@ -57,11 +57,4 @@ describe Oystercard do
     end
   end
 
-  describe '#in_journey' do
-    it 'returns true if in_use is true' do
-      subject.top_up(Oystercard::MIN_CHARGE)
-      subject.touch_in
-      expect(subject.in_journey).to eq true
-    end
-  end
 end
