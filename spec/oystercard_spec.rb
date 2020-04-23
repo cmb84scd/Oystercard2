@@ -34,9 +34,16 @@ describe Oystercard do
   describe '#touch_out' do
     let(:station) { double("Tube station", :name => "Oxford")}
 
-    it 'Touch out deducts minimum fare' do
+    it 'Touch out deducts minimum fare if you have tapped in at entry and exit' do
+      subject.top_up(10)
+      subject.touch_in(station)
       expect { subject.touch_out(station) }.to change{subject.balance}.by -Oystercard::MIN_CHARGE
     end
+
+    it 'deducts maximum PENALTY_FARE' do
+      expect { subject.touch_out(station) }.to change{subject.balance}.by -Oystercard::PENALTY_FARE
+    end
+
   end
 
 end
