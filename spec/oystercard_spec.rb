@@ -58,8 +58,10 @@ describe Oystercard do
       expect { subject.touch_out(station) }.to change { subject.entry_station }.to nil
     end
 
-    it 'sets exit_station variable to station object' do
-      expect{ subject.touch_out(station) }.to change {subject.exit_station}.to station
+    it 'adds entry station and exit station to journeys array as a hash' do
+      subject.top_up(Oystercard::MIN_CHARGE)
+      subject.touch_in(station)
+      expect {subject.touch_out(station)}.to change{subject.journeys}.to [{entry: subject.entry_station, exit: station}]
     end
   end
 
@@ -71,4 +73,9 @@ describe Oystercard do
     end
   end
 
+  describe '#journeys' do
+    it 'journeys is empty when card is initialized' do
+      expect(subject.journeys).to eq []
+    end
+  end
 end
