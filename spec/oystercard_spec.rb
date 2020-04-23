@@ -51,11 +51,15 @@ describe Oystercard do
     it {is_expected.to respond_to (:touch_out)}
 
     it 'Touch out deducts minimum fare' do
-      expect { subject.touch_out }.to change{subject.balance}.by -Oystercard::MIN_CHARGE
+      expect { subject.touch_out(station) }.to change{subject.balance}.by -Oystercard::MIN_CHARGE
     end
 
     it 'sets the entry_station variable to nil' do
-      expect { subject.touch_out }.to change { subject.entry_station }.to nil
+      expect { subject.touch_out(station) }.to change { subject.entry_station }.to nil
+    end
+
+    it 'sets exit_station variable to station object' do
+      expect{ subject.touch_out(station) }.to change {subject.exit_station}.to station
     end
   end
 
